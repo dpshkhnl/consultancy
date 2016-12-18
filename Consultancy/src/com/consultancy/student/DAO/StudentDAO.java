@@ -175,7 +175,7 @@ public class StudentDAO {
 			ps.setInt(1, consultancyId);
 			ResultSet rs = ps.executeQuery();
 
-			if (rs.next()) {
+			while (rs.next()) {
 				StudentModel student = new StudentModel();
 				student.setId(rs.getInt("id"));
 				student.setName(rs.getString("student_name"));

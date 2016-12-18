@@ -74,7 +74,7 @@ public class UserController extends HttpServlet {
 				user = getUser(request);
 				try {
 				int res = objUserCont.addUser((user));
-					if (isSignUp.equals("True") && res != 0){
+					if (!isSignUp.equals("True") && res != 0){
 					if (user.getRole().name().equals("Student"))
 					{
 						StudentModel student = new StudentModel();

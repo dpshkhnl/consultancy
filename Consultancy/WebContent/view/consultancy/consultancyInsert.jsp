@@ -48,7 +48,7 @@
                                         <div class="col-md-8">
                                             <input type="text" class="form-control" name="name"
                                                    value="${consultancy.name}" placeholder="Name" required=""
-                                                   maxlength="30" />
+                                                    />
                                         </div>
                                     </div>
 
@@ -58,7 +58,7 @@
                                         <div class="col-md-8">
                                             <input type="text" class="form-control" name="address"
                                                    value="${consultancy.address}" placeholder="Address" required=""
-                                                   maxlength="9" />
+                                                   />
                                         </div>
                                     </div>
                                                  
@@ -68,7 +68,7 @@
                                         <div class="col-md-8">
                                             <input type="text" class="form-control" name="website"
                                                    value="${consultancy.website}" placeholder="Website" required=""
-                                                   maxlength="9" />
+                                                    />
                                         </div>
                                     </div>
 
@@ -106,7 +106,7 @@
                                         <div class="col-md-8">
                                             <input type="text" class="form-control" name="contactPerson"
                                                    value="${consultancy.contactPerson}" placeholder="Contact Person"
-                                                   maxlength="30" />
+                                                  />
                                         </div>
                                     </div>
 <div id ="map_container" style="width:100%;height:200px;">
@@ -140,7 +140,7 @@
 
  <script type="text/javascript">
             function loadMap() {
-                var latlng = new google.maps.LatLng(28.3949, 84.1240);
+                var latlng = new google.maps.LatLng(27.7172, 85.3240);
                 var myOptions = {
                     zoom: 8,
                     center: latlng,
