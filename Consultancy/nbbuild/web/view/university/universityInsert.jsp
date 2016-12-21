@@ -138,12 +138,18 @@
             function loadMap() {
                 var latlng = new google.maps.LatLng(28.3949, 84.1240);
                 var myOptions = {
-                    zoom: 8,
+                    zoom: 12,
                     center: latlng,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
                 var map = new google.maps.Map(document.getElementById("map_container"), myOptions);
-
+                             if (navigator.geolocation) {
+     navigator.geolocation.getCurrentPosition(function (position) {
+         initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+         map.setCenter(initialLocation);
+     });
+ }
+           
                
                 google.maps.event.addListener(map, 'click', function (event) {
                     

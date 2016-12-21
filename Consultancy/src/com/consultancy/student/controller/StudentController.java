@@ -206,7 +206,7 @@ public class StudentController extends HttpServlet {
 			break;
 
 		case "DEL":
-			id = request.getParameter("id");
+			id = request.getParameter("sid");
 			student = new StudentModel();
 			if (id != null) {
 				student = objStudentCont.getStudentById(Integer.valueOf(id));

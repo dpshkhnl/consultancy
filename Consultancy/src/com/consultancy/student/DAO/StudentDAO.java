@@ -55,10 +55,16 @@ public class StudentDAO {
 
 	public void removeStudent(int stuId) {
 		try {
-			String sql = "DELETE FROM student_record WHERE id=?";
+                    
+                    String sql = "DELETE FROM student_record WHERE id=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, stuId);
 			ps.executeUpdate();
+                    
+			String sql1 = "DELETE FROM student_consultant_record WHERE id=?";
+			PreparedStatement ps1 = conn.prepareStatement(sql1);
+			ps1.setInt(1, stuId);
+			ps1.executeUpdate();
 			message = "Delete Successfull";
 		} catch (SQLException e) {
 			e.printStackTrace();
