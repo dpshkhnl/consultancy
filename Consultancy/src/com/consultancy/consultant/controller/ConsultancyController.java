@@ -51,7 +51,7 @@ public class ConsultancyController extends HttpServlet {
 				ConsultancyModel consultancy = new ConsultancyModel();
 				consultancy = objConsultancyCont.getConsultancyByUserId(user.getUserId());
 				request.setAttribute("consultancy", consultancy);
-				dir = "/view/consultancy/consultancyUpd.jsp";
+				dir = "/view/consultancy/ConsultancyUpd.jsp";
 
 			} else {
 
