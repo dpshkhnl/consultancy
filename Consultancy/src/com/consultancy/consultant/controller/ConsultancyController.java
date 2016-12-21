@@ -45,13 +45,13 @@ public class ConsultancyController extends HttpServlet {
 				user = (User) request.getSession().getAttribute("LoggedInUser");
 
 			}
-
+                        
 			if (user.getRole().name().equals("Consultancy")) {
 
 				ConsultancyModel consultancy = new ConsultancyModel();
 				consultancy = objConsultancyCont.getConsultancyByUserId(user.getUserId());
 				request.setAttribute("consultancy", consultancy);
-				dir = "/view/consultancy/ConsultancyUpd.jsp";
+				dir = "/view/consultancy/consultancyUpd.jsp";
 
 			} else {
 
