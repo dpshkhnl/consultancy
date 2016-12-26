@@ -22,220 +22,228 @@ import com.consultancy.user.model.User;
 import com.consultancy.user.model.UserRole;
 import com.consultancy.user.model.UserStatus;
 
-@WebServlet({ "/User" })
+@WebServlet({"/User"})
 public class UserController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
-	String isSignUp = "";
-	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    private static final long serialVersionUID = 1L;
 
-		UserDAO objUserCont = new UserDAO();
-		StudentDAO studentDAO = new StudentDAO();
-		ConsultancyDAO consultancyDAO = new ConsultancyDAO();
-		
-		String action = request.getParameter("action");
-		String message = null;
-		String dir = null;
-		
-/*
+    String isSignUp = "";
+
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        UserDAO objUserCont = new UserDAO();
+        StudentDAO studentDAO = new StudentDAO();
+        ConsultancyDAO consultancyDAO = new ConsultancyDAO();
+
+        String action = request.getParameter("action");
+        String message = null;
+        String dir = null;
+
+        /*
 		if (request.getSession().getAttribute("LoggedInUser") == null && !action.equals("SIGNUP")) {
 			action = "LOGINFAILED";
 		}
-*/
-		switch (action) {
-		
-		case "SIGNUP":
+         */
+        switch (action) {
 
-			dir = "/view/user/signup.jsp";
-			break;
+            case "SIGNUP":
 
-		case "LOGINFAILED":
-			dir = "Login?action=LOGIN";
-			break;
+                dir = "/view/user/signup.jsp";
+                break;
 
-		case "QRY":
-			/* List<User> lista = service.contactosQry(); */
+            case "LOGINFAILED":
+                dir = "Login?action=LOGIN";
+                break;
 
-			List<User> lista = new ArrayList<User>();
-			lista = objUserCont.getAllUsers();
-			request.setAttribute("lista", lista);
-			dir = "/view/user/userQry.jsp";
+            case "QRY":
+                /* List<User> lista = service.contactosQry(); */
 
-			break;
+                List<User> lista = new ArrayList<User>();
+                lista = objUserCont.getAllUsers();
+                request.setAttribute("lista", lista);
+                dir = "/view/user/userQry.jsp";
 
-		case "INS":
+                break;
 
-			User user = new User();
-			message = verify(request, user);
+            case "INS":
 
-			if (message == null) {
-				
-				user = getUser(request);
-				try {
-				int res = objUserCont.addUser((user));
-					if (isSignUp.equals("True") && res != 0){
-					if (user.getRole().name().equals("Student"))
-					{
-						StudentModel student = new StudentModel();
-						student.setName(user.getFullName());
-						student.setUserId(res);
-						studentDAO.addStudent(student);
-					}
-					else if (user.getRole().name().equals("Consultancy"))
-					{
-						ConsultancyModel consult = new ConsultancyModel();
-						consult.setName(user.getFullName());
-						consult.setUserId(res);
-						consultancyDAO.addConsultancy(consult);
-						
-					}
-					}
-					if (isSignUp.equals("True"))
-					{
-						request.setAttribute("message", "Registration Successful");
-						dir = "/login.jsp";
-						break;
-					}
-					
-				} catch (NoSuchAlgorithmException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvalidKeySpecException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                User user = new User();
+                message = verify(request, user);
 
-				if (message == null) {
-					request.setAttribute("user", user);
-					dir = "/view/user/userInsert.jsp";
-				} else {
-					dir = "User?action=QRY";
-				}
+                if (message == null) {
 
-			} else {
-				request.setAttribute("user", user);
-				dir = "/view/user/userInsert.jsp";
-			}
-			break;
+                    user = getUser(request);
+                    try {
+                         UserDAO userDao = new UserDAO();
+                            if (userDao.getUserByUsernameAndRole(user.getUserName(), user.getRole().name()) != null) {
+                                dir = "/view/user/signup.jsp";
+                                user.setPassword("");
+                                message += "<li>Duplicate Username</li>";
+                                request.setAttribute("user", user);
+                                break;
+                            }
+                        int res = objUserCont.addUser((user));
+                        if (isSignUp.equals("True") && res != 0) {
+                           
 
-		
+                            if (user.getRole().name().equals("Student")) {
+                                StudentModel student = new StudentModel();
+                                student.setName(user.getFullName());
+                                student.setUserId(res);
+                                studentDAO.addStudent(student);
+                            } else if (user.getRole().name().equals("Consultancy")) {
+                                ConsultancyModel consult = new ConsultancyModel();
+                                consult.setName(user.getFullName());
+                                consult.setUserId(res);
+                                consultancyDAO.addConsultancy(consult);
 
-		case "UPD":
-			String id = request.getParameter("id");
-			user = new User();
-			if (id != null)
-				user = objUserCont.getUserById(Integer.valueOf(id));
-			message = verify(request, user);
+                            }
+                        }
+                        if (isSignUp.equals("True")) {
+                            request.setAttribute("message", "Registration Successful");
+                            dir = "/login.jsp";
+                            break;
+                        }
 
-			if (message == null) {
-				user = getUser(request);
-				message = objUserCont.editUser((user));
+                    } catch (NoSuchAlgorithmException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (InvalidKeySpecException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
 
-				if (message == null) {
-					request.setAttribute("user", user);
-					dir = "/view/user/userUpd.jsp";
-				} else {
-					dir = "User?action=QRY";
-				}
+                    if (message == null) {
+                        request.setAttribute("user", user);
+                        dir = "/view/user/userInsert.jsp";
+                    } else {
+                        dir = "User?action=QRY";
+                    }
 
-			} else {
-				request.setAttribute("user", user);
-				dir = "/view/user/userUpd.jsp";
-			}
-			break;
+                } else {
+                    request.setAttribute("user", user);
+                    dir = "/view/user/userInsert.jsp";
+                }
+                break;
 
-		case "DEL":
-			id = request.getParameter("id");
-			user = new User();
-			if (id != null) {
-				user = objUserCont.getUserById(Integer.valueOf(id));
-				objUserCont.removeUser(user.getUserId());
-			} else {
-				message = "Delete Failed";
-				dir = "User?action=QRY";
-			}
+            case "UPD":
+                String id = request.getParameter("id");
+                user = new User();
+                if (id != null) {
+                    user = objUserCont.getUserById(Integer.valueOf(id));
+                }
+                message = verify(request, user);
 
-			dir = "User?action=QRY";
-			break;
+                if (message == null) {
+                    user = getUser(request);
+                    message = objUserCont.editUser((user));
 
-		default:
-			message = "action no reconicida";
+                    if (message == null) {
+                        request.setAttribute("user", user);
+                        dir = "/view/user/userUpd.jsp";
+                    } else {
+                        dir = "User?action=QRY";
+                    }
 
-		}
+                } else {
+                    request.setAttribute("user", user);
+                    dir = "/view/user/userUpd.jsp";
+                }
+                break;
 
-		if (message != null) {
-			String msg = "<div class=\"col-md-5 col-md-offset-3\" style=\"text-align: center\">";
-			msg += "<div class=\"alert alert-danger\">";
-			msg += "<button class=\"close\" data-dismiss=\"alert\"><span>&times;</span></button>";
-			msg += "<strong>Alerta!!</strong><br/>";
-			msg += message;
-			msg += "</div></div>";
-			request.setAttribute("message", msg);
-		}
+            case "DEL":
+                id = request.getParameter("id");
+                user = new User();
+                if (id != null) {
+                    user = objUserCont.getUserById(Integer.valueOf(id));
+                    objUserCont.removeUser(user.getUserId());
+                } else {
+                    message = "Delete Failed";
+                    dir = "User?action=QRY";
+                }
 
-		RequestDispatcher despachador = request.getRequestDispatcher(dir);
-		despachador.forward(request, response);
+                dir = "User?action=QRY";
+                break;
 
-	}
+            default:
+                message = "no action";
 
-	private String verify(HttpServletRequest request, User user) {
+        }
 
-		String message = "<ul>";
-		// System.out.println("tamano " + message.length());
-		String fullName = request.getParameter("fullName");
-		String userName = request.getParameter("userName");
-		String password = request.getParameter("password");
+        if (message != null) {
+            String msg = "<div class=\"col-md-5 col-md-offset-3\" style=\"text-align: center\">";
+            msg += "<div class=\"alert alert-danger\">";
+            msg += "<button class=\"close\" data-dismiss=\"alert\"><span>&times;</span></button>";
+            msg += "<strong>Alert!!</strong><br/>";
+            msg += message;
+            msg += "</div></div>";
+            request.setAttribute("message", msg);
+        }
 
-		String role = request.getParameter("role");
-		String status = request.getParameter("status");
-		String email = request.getParameter("email");
-		String phone = request.getParameter("contact");
+        RequestDispatcher despachador = request.getRequestDispatcher(dir);
+        despachador.forward(request, response);
 
-		if ((fullName == null) || (fullName.trim().length() == 0)) {
-			message += "<li>Please Enter Full Name</li>";
-		}
-		if ((userName == null) || (userName.trim().length() == 0)) {
-			message += "<li>Please Enter Username</li>";
-		}
-		if ((password == null) || (password.trim().length() == 0)) {
-			message += "<li>Please Enter Password</li>";
-		}
+    }
 
-		if (message.equals("<ul>")) {
-			message = null;
-		} else {
-			message += "</ul>";
-		}
+    private String verify(HttpServletRequest request, User user) {
 
-		return message;
-	}
+        String message = "<ul>";
+        // System.out.println("tamano " + message.length());
+        String fullName = request.getParameter("fullName");
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
 
-	public User getUser(HttpServletRequest request) {
-		String fullName = request.getParameter("fullName");
-		String userName = request.getParameter("userName");
-		String password = request.getParameter("password");
-		String role = request.getParameter("role");
-		String status = request.getParameter("status");
-		String email = request.getParameter("email");
-		String phone = request.getParameter("contact");
-		String id = request.getParameter("id");
-		
-		 isSignUp = request.getParameter("signup");
-		User user = new User();
-		user.setContactNo(phone);
-		user.setEmail(email);
+        String role = request.getParameter("role");
+        String status = request.getParameter("status");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("contact");
 
-		user.setRole(UserRole.valueOf(role));
-		user.setStatus(UserStatus.valueOf(status));
-		user.setUserName(userName);
-		user.setFullName(fullName);
-		user.setPassword(password);
+        if ((fullName == null) || (fullName.trim().length() == 0)) {
+            message += "<li>Please Enter Full Name</li>";
+        }
+        if ((userName == null) || (userName.trim().length() == 0)) {
+            message += "<li>Please Enter Username</li>";
+        }
+        if ((password == null) || (password.trim().length() == 0)) {
+            message += "<li>Please Enter Password</li>";
+        }
 
-		if (id != null)
-			user.setUserId(Integer.valueOf(id));
+        if (message.equals("<ul>")) {
+            message = null;
+        } else {
+            message += "</ul>";
+        }
 
-		return user;
-	}
+        return message;
+    }
+
+    public User getUser(HttpServletRequest request) {
+        String fullName = request.getParameter("fullName");
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
+        String role = request.getParameter("role");
+        String status = request.getParameter("status");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("contact");
+        String id = request.getParameter("id");
+
+        isSignUp = request.getParameter("signup");
+        User user = new User();
+        user.setContactNo(phone);
+        user.setEmail(email);
+
+        user.setRole(UserRole.valueOf(role));
+        user.setStatus(UserStatus.valueOf(status));
+        user.setUserName(userName);
+        user.setFullName(fullName);
+        user.setPassword(password);
+
+        if (id != null) {
+            user.setUserId(Integer.valueOf(id));
+        }
+
+        return user;
+    }
 
 }

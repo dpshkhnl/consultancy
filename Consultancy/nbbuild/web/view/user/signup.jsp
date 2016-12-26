@@ -64,7 +64,7 @@
                                         </label>
                                         <div class="col-md-8">
                                             <input type="password" class="form-control" name="password"
-                                                   value="${user.password}" placeholder="User Name" required=""
+                                                   value="${user.password}" placeholder="Password" required=""
                                                    />
                                         </div>
                                     </div>
@@ -121,7 +121,7 @@
                     </div>
                     <br />
                     <%-- para mensajes  --%>
-                    <div>${mensaje}</div>
+                    <div>${message}</div>
 
                 </div>
             </div>

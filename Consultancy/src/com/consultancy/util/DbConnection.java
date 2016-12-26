@@ -53,7 +53,7 @@ public class DbConnection {
     }
 
     public DbConnection() {
-        this.database = "consultancy";
+        this.database = "consultan_error";
     }
 
     public DbConnection(String database) {
