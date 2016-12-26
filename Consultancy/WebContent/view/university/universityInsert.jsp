@@ -150,19 +150,28 @@
      });
  }
            
-               
-                google.maps.event.addListener(map, 'click', function (event) {
-                    
-                    var marker = new google.maps.Marker({
-                        position: event.latLng,
-                        map: map
-                    });
-                    var latlng = marker.getPosition();
+           
+            google.maps.event.addListener(map, 'click', function(event) {
+   placeMarker(event.latLng);
+      var latlng = marker.getPosition();
 
                     document.getElementById("latlng").value = latlng;
 
+});
+  var marker;
+function placeMarker(location) {
+  if (marker == null) {
+    marker = new google.maps.Marker({
+          position: location,
+          map: map
+      });
+  } else {
+    marker.setPosition(location);
+  }
+}
+               
+                 
 
-                });
 
                 
             }

@@ -124,7 +124,7 @@
 				</div>
 				<br />
 				<%-- para mensajes  --%>
-				<div>${message}</div> 
+				
 
 			</div>
 		</div>
@@ -161,19 +161,25 @@
                 title: name
             });
 
-            google.maps.event.addListener(map, 'click', function (event) {
-                marker.setMap(null);
-                
-                 var marker2 = new google.maps.Marker({
-                    position: event.latLng,
-                    map: map
-                });
+             google.maps.event.addListener(map, 'click', function(event) {
+   placeMarker(event.latLng);
+});
+  var marker;
+function placeMarker(location) {
+  if (marker == null) {
+    marker = new google.maps.Marker({
+          position: location,
+          map: map
+      });
+  } else {
+    marker.setPosition(location);
+  }
                 var latlng = marker2.getPosition();
 
                 document.getElementById("latlng").value = latlng;
 
 
-            });
+    }
 
             
             function getLatLngFromString(ll) {

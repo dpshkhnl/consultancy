@@ -144,7 +144,7 @@
                 //var latlng = new google.maps.LatLng(28.3949, 84.1240);
                 var latlng = getLatLngFromString(latln);
                 var myOptions = {
-                    zoom: 12,
+                    zoom: 14,
                     center: latlng,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
@@ -153,7 +153,7 @@
                         if (navigator.geolocation) {
      navigator.geolocation.getCurrentPosition(function (position) {
          initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-         map.setCenter(initialLocation);
+         map.setCenter(latlng);
      });
  }
            
@@ -162,6 +162,7 @@
                 map: map,
                 title: name
             });
+            map.panTo(marker.getPosition());
             google.maps.event.addListenerOnce(map, 'idle', function () {
 
                     google.maps.event.trigger(map, 'resize');
