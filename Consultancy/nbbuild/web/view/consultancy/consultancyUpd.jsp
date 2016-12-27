@@ -138,12 +138,11 @@
         function loadMap() {
             var latlng1 = document.getElementById("latlng").value;
             var name = document.getElementById("name").value;
-
+             
             var latlng = getLatLngFromString(latlng1);
-
+            
             var myOptions = {
                 zoom: 12,
-                center: latlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById("map_container"), myOptions);
@@ -174,7 +173,7 @@ function placeMarker(location) {
   } else {
     marker.setPosition(location);
   }
-                var latlng = marker2.getPosition();
+                var latlng = marker.getPosition();
 
                 document.getElementById("latlng").value = latlng;
 
