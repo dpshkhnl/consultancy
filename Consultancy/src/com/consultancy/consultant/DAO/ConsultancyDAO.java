@@ -126,6 +126,7 @@ public class ConsultancyDAO {
 				consult.setPhone(rs.getString("phone"));
 				consult.setEmail(rs.getString("email"));
 				consult.setWebsite(rs.getString("website"));
+                                if (rs.getString("latlng") != null)
                                 consult.setLatlng(rs.getString("latlng").replace("(", "").replace(")", ""));
 				lstConsult.add(consult);
 			}

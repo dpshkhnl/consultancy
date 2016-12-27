@@ -154,13 +154,13 @@
          map.setCenter(initialLocation);
      });
  }
-           
+           if (latlng != null){
             var marker = new google.maps.Marker({
                 position: latlng,
                 map: map,
                 title: name
             });
-
+            }
              google.maps.event.addListener(map, 'click', function(event) {
    placeMarker(event.latLng);
 });
